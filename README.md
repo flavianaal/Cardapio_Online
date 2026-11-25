@@ -1,36 +1,119 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🍕 Pizzaria API
 
-## Getting Started
+API REST para gerenciar o cardápio de uma pizzaria: pizzas, ingredientes, tamanhos e preços. Ela alimenta o frontend do [Cardápio Online](https://github.com/flavianaal/Cardapio_Online), onde os clientes consultam as opções e fazem pedidos pelo WhatsApp.
 
-First, run the development server:
+## 🚀 Acesse o projeto
+
+🌐 **Aplicação online (frontend):** https://cardapio-online-eta-beige.vercel.app/
+
+🔗 **API:** https://pizzaria-api.duckdns.org/pizzas
+
+## ✨ Funcionalidades
+
+- Listagem de pizzas com ingredientes, tamanhos e preços.
+- Cadastro, atualização e remoção de pizzas e ingredientes.
+- Upload de imagens de pizzas e ingredientes (enviadas em base64 e salvas no servidor).
+- Autenticação com JWT: consultas são públicas, e alterações exigem um usuário administrador.
+- CORS configurado para o frontend.
+
+## 🛠️ Tecnologias utilizadas
+
+- **Java** — linguagem de programação.
+- **Quarkus** — framework para a API REST.
+- **PostgreSQL** — banco de dados relacional.
+- **Hibernate ORM com Panache** — persistência e acesso aos dados.
+- **SmallRye JWT** — autenticação com token JWT (RS256).
+- **Maven** — gerenciamento de dependências e build.
+- **Postman** — testes dos endpoints.
+
+## 🏗️ Arquitetura
+
+A aplicação segue uma estrutura em camadas:
+
+- **Resources:** recebem as requisições HTTP e devolvem as respostas.
+- **DTOs:** definem os dados recebidos nas requisições (`PizzaDTO`, `ItemPizzaDTO`, `IngredienteDTO`).
+- **Entidades:** `Pizza`, `Ingrediente` e `ItemPizza` (tamanho e valor), mapeadas para o banco.
+- **Repositórios:** acesso ao banco de dados com Panache.
+- **Utilitário de imagens:** converte a imagem em base64 e grava o arquivo no servidor.
+
+## 🔗 Endpoints
+
+| Método | Rota | Acesso | Descrição |
+|---|---|---|---|
+| GET | `/pizzas` | Público | Lista as pizzas |
+| POST | `/pizzas` | Admin | Cadastra uma pizza |
+| PUT | `/pizzas/{id}` | Admin | Atualiza uma pizza |
+| DELETE | `/pizzas/{id}` | Admin | Remove uma pizza |
+| GET | `/ingredientes` | Público | Lista os ingredientes |
+| POST | `/ingredientes` | Admin | Cadastra um ingrediente |
+| PUT | `/ingredientes/{id}` | Admin | Atualiza um ingrediente |
+| DELETE | `/ingredientes/{id}` | Admin | Remove um ingrediente |
+
+As imagens enviadas ficam disponíveis em `/uploads/pizzas/{arquivo}`.
+
+## 💻 Como executar localmente
+
+### Pré-requisitos
+
+- JDK (versão definida no `pom.xml`)
+- Maven (ou o `mvnw` do projeto)
+- PostgreSQL
+- Git
+
+### Passo a passo
+
+1. Clone o repositório:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/flavianaal/Pizzaria.git
+cd Pizzaria
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Crie o banco de dados no PostgreSQL:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```sql
+CREATE DATABASE "Pizzaria";
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. Ajuste o `src/main/resources/application.properties` com os dados do seu banco:
 
-## Learn More
+```properties
+quarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/Pizzaria
+quarkus.datasource.username=SEU_USUARIO
+quarkus.datasource.password=SUA_SENHA
+```
 
-To learn more about Next.js, take a look at the following resources:
+4. Inicie a aplicação em modo de desenvolvimento:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+./mvnw quarkus:dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+5. Acesse no navegador ou no Postman:
 
-## Deploy on Vercel
+```
+http://localhost:8080/pizzas
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## ☁️ Deploy
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+A API roda em um servidor Ubuntu no **AWS Lightsail**, com o banco PostgreSQL no próprio servidor. O **Nginx** funciona como proxy reverso, o **Certbot (Let's Encrypt)** fornece o certificado HTTPS, e o domínio gratuito é gerenciado pelo **DuckDNS**.
+
+## 📚 Aprendizados
+
+- Desenvolvimento de API REST com Java e Quarkus.
+- Persistência de dados com PostgreSQL e Panache.
+- Autenticação e autorização com JWT.
+- Upload e armazenamento de imagens.
+- Deploy em servidor Linux na nuvem.
+- Configuração de domínio, Nginx e HTTPS.
+
+## 👩‍💻 Desenvolvido por
+
+**Flaviana Andrade**
+Tecnóloga em Telemática | Desenvolvedora em formação.
+
+- GitHub: [@flavianaal](https://github.com/flavianaal)
+- LinkedIn: [Flaviana Andrade](https://www.linkedin.com/in/flaviana-andrade/)
+
+⭐ Se este projeto despertou seu interesse, fique à vontade para explorar o repositório!
